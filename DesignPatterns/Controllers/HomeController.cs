@@ -1,12 +1,15 @@
-﻿using DesignPatterns.Models;
+﻿using DesignPatterns.ModelBuilder;
+using DesignPatterns.Models;
 using DesignPatterns.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using DesignPatterns.FactoryMethod;
 
 namespace DesignPatterns.Controllers
 {
@@ -16,7 +19,7 @@ namespace DesignPatterns.Controllers
 
         private readonly IVehicleRepository _vehicleRepository;
 
-        public HomeController(IVehicleRepository vehicleRepository,ILogger<HomeController> logger)
+        public HomeController(IVehicleRepository vehicleRepository, ILogger<HomeController> logger)
         {
             _vehicleRepository = vehicleRepository;
             _logger = logger;
@@ -35,14 +38,24 @@ namespace DesignPatterns.Controllers
         [HttpGet]
         public IActionResult AddMustang()
         {
-            _vehicleRepository.AddVehicle(new Car("red","Ford","Mustang"));
+            var builder = new CarBuilder();
+            _vehicleRepository.AddVehicle(builder.Build());
             return Redirect("/");
         }
 
         [HttpGet]
         public IActionResult AddExplorer()
         {
-            _vehicleRepository.AddVehicle(new Car("red", "Ford", "Explorer"));
+            var builder = new CarBuilder();
+            _vehicleRepository.AddVehicle(builder.SetModel("Explorer").Build());
+            return Redirect("/");
+        }
+
+        [HttpGet]
+        public IActionResult AddEscape()
+        {
+            var vehicle = Factory.CreateVehicle("Escape", "Red", "Ford", DateTime.Now.Year);
+            _vehicleRepository.AddVehicle(vehicle);
             return Redirect("/");
         }
 
@@ -55,12 +68,12 @@ namespace DesignPatterns.Controllers
                 vehicle.StartEngine();
                 return Redirect("/");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ViewBag.ErrorMessage = ex.Message;
                 return Redirect($"/?error={ex.Message}");
             }
-          
+
         }
 
         [HttpGet]
@@ -89,13 +102,13 @@ namespace DesignPatterns.Controllers
                 vehicle.StopEngine();
                 return Redirect("/");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ViewBag.ErrorMessage = ex.Message;
                 return Redirect($"/?error={ex.Message}");
             }
-           
-           
+
+
         }
 
 

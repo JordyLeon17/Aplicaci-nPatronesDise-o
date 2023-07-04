@@ -1,4 +1,5 @@
 ﻿using DesignPatterns.Models;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace DesignPatterns.Infraestructure.Singleton
@@ -7,13 +8,13 @@ namespace DesignPatterns.Infraestructure.Singleton
     {
         public ICollection<Vehicle> Vehiculos { get; set; }
 
-        private MemoryCollection Instance;
+        private static MemoryCollection Instance;
 
         public MemoryCollection() 
         {
             Vehiculos=new List<Vehicle>();
         }
-        public MemoryCollection GetInstance()
+        public static MemoryCollection GetInstance()
         {
             if (Instance == null)
             {
@@ -23,3 +24,4 @@ namespace DesignPatterns.Infraestructure.Singleton
         }
     }
 }
+//este es
